@@ -22,9 +22,13 @@ import {
 	CartItemsCounter,
 	CartModalDimmer,
 } from './NavStyles';
+import CartContext from '../../context/CartContext';
 
 export default class Nav extends React.Component {
+	// to be able to consume context
+	static contextType = CartContext;
 	state = {
+		animationStart: false,
 		cartIsOpen: false,
 		currencyIsOpen: false,
 	};
@@ -34,17 +38,34 @@ export default class Nav extends React.Component {
 			cartIsOpen: false,
 			currencyIsOpen: !this.state.currencyIsOpen,
 		});
-		console.log(this.state.currencyIsOpen);
 	};
 	handelCartModal = () => {
-		this.setState({
-			cartIsOpen: !this.state.cartIsOpen,
-			currencyIsOpen: false,
-		});
-		console.log(this.state.cartIsOpen);
+		if (!this.state.cartIsOpen) {
+			this.setState({
+				animationStart: !this.state.animationStart,
+				cartIsOpen: !this.state.cartIsOpen,
+				currencyIsOpen: false,
+			});
+			return;
+		}
+		if (this.state.cartIsOpen) {
+			this.setState({
+				animationStart: !this.state.animationStart,
+			});
+			// timeout to wait for fadeout animation to complete
+
+			setTimeout(() => {
+				this.setState({
+					cartIsOpen: !this.state.cartIsOpen,
+					currencyIsOpen: false,
+				});
+			}, 700);
+			return;
+		}
 	};
 
 	render() {
+		console.log(this.context.cart);
 		return (
 			<Container>
 				<LeftSection>
@@ -67,7 +88,7 @@ export default class Nav extends React.Component {
 							}}
 						>
 							<SymbolContainer>$</SymbolContainer>
-							<ArrowContainer>
+							<ArrowContainer open={this.state.currencyIsOpen}>
 								<Image src={arrowLogo} alt="arrow" />
 							</ArrowContainer>
 						</SelectedCurrencyContainer>
@@ -88,8 +109,12 @@ export default class Nav extends React.Component {
 				</CurrencyOverlayContainer>
 				<CartOverlayContainer
 					open={this.state.cartIsOpen}
+					animation={this.state.animationStart}
 				></CartOverlayContainer>
-				<CartModalDimmer open={this.state.cartIsOpen} />
+				<CartModalDimmer
+					open={this.state.cartIsOpen}
+					animation={this.state.animationStart}
+				/>
 			</Container>
 		);
 	}

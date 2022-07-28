@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { Keyframes } from 'styled-components';
 
 export const Container = styled.div`
 	position: relative;
@@ -40,6 +41,8 @@ export const ArrowContainer = styled.span`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	transition: all ease 0.3s;
+	transform: rotate(${(props) => (props.open ? 0 : 180)}deg);
 `;
 export const SymbolContainer = styled.span`
 	font-size: 18px;
@@ -67,8 +70,20 @@ export const CartItemsCounter = styled.div`
 	font-size: 8px;
 	font-weight: 500;
 `;
+const fadeInAnimation = keyframes`
+ 0% { opacity: 0 }
+ 100% { opacity: 1 }
+ 
+`;
+const fadeOutAnimation = keyframes`
+0% { opacity: 1 }
+ 100% { opacity: 0 }
+`;
 
 export const CartOverlayContainer = styled.div`
+	animation: ${(props) =>
+			props.animation ? fadeInAnimation : fadeOutAnimation}
+		ease 0.7s;
 	display: ${(props) => (props.open ? 'block' : 'none')};
 	position: absolute;
 	background-color: lightgray;
@@ -79,6 +94,9 @@ export const CartOverlayContainer = styled.div`
 	z-index: 10;
 `;
 export const CartModalDimmer = styled.div`
+	animation: ${(props) =>
+			props.animation ? fadeInAnimation : fadeOutAnimation}
+		ease 0.7s;
 	display: ${(props) => (props.open ? 'block' : 'none')};
 	position: absolute;
 	width: 100%;
@@ -89,11 +107,13 @@ export const CartModalDimmer = styled.div`
 	background-color: #000000ad;
 `;
 export const CurrencyOverlayContainer = styled.div`
+	animation: ${(props) => (props.open ? fadeInAnimation : fadeOutAnimation)}
+		ease 0.7s;
 	display: ${(props) => (props.open ? 'block' : 'none')};
 	position: absolute;
 	width: 114px;
 	height: 169px;
 	top: 60px;
-	right: 101px;
+	right: 70px;
 	background-color: grey;
 `;
