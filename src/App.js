@@ -14,6 +14,7 @@ import { onError } from '@apollo/client/link/error';
 import styled from 'styled-components';
 import Nav from './components/navigation/Nav';
 import CartContext from './context/CartContext';
+import PageRoutes from './pages/PageRoutes';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -37,6 +38,8 @@ const client = new ApolloClient({
 class App extends React.Component {
 	// main state
 	state = {
+		selectedCategorie: 'default',
+		mainData: [],
 		cart: [],
 	};
 	componentDidMount() {
@@ -48,10 +51,21 @@ class App extends React.Component {
 			cart: [...this.state.cart, obj],
 		});
 	};
+	addMainData = (data) => {
+		this.setState({
+			mainData: data,
+		});
+	};
+
+	setSelectedCategorie = (cat) => {
+		this.setState({
+			selectedCategorie: cat,
+		});
+	};
 
 	render() {
-		const { cart } = this.state;
-		const { addToCart } = this;
+		const { cart, mainData, selectedCategorie } = this.state;
+		const { addToCart, addMainData, setSelectedCategorie } = this;
 		return (
 			<ApolloProvider client={client}>
 				<Container>
@@ -59,14 +73,26 @@ class App extends React.Component {
 						value={{
 							cart,
 							addToCart,
+							mainData,
+							addMainData,
+							selectedCategorie,
+							setSelectedCategorie,
 						}}
 					>
-						<Nav />
 						<Query query={LOAD_CATEGORIES}>
 							{({ loading, data }) => {
-								console.log(data);
+								if (!loading && mainData.length <= 1) {
+									console.log(data);
+									this.setState({
+										selectedCategorie:
+											data.categories[0].name,
+										mainData: data.categories,
+									});
+								}
 							}}
 						</Query>
+						<Nav />
+						<PageRoutes />
 					</CartContext.Provider>
 				</Container>
 			</ApolloProvider>

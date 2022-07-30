@@ -107,13 +107,21 @@ export const CartModalDimmer = styled.div`
 	background-color: #000000ad;
 `;
 export const CurrencyOverlayContainer = styled.div`
+	z-index: 20;
 	animation: ${(props) => (props.open ? fadeInAnimation : fadeOutAnimation)}
 		ease 0.7s;
-	display: ${(props) => (props.open ? 'block' : 'none')};
+	display: ${(props) => (props.open ? 'flex' : 'none')};
 	position: absolute;
 	width: 114px;
 	height: 169px;
 	top: 60px;
 	right: 70px;
-	background-color: grey;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+	gap: 0.5rem;
+	background-color: white;
+	-webkit-box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
+	-moz-box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
+	box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
 `;

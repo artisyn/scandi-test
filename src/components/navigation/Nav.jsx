@@ -35,7 +35,7 @@ export default class Nav extends React.Component {
 
 	handleCurrencyModal = () => {
 		this.setState({
-			cartIsOpen: false,
+			// cartIsOpen: false,
 			currencyIsOpen: !this.state.currencyIsOpen,
 		});
 	};
@@ -64,15 +64,40 @@ export default class Nav extends React.Component {
 		}
 	};
 
+	testClick = () => {
+		console.log(this.context.mainData);
+	};
+
 	render() {
-		console.log(this.context.cart);
+		// console.log(this.context.cart);
 		return (
 			<Container>
 				<LeftSection>
 					{/* map all categories */}
-					<Categorie>Mens</Categorie>
-					<Categorie>Women</Categorie>
-					<Categorie>Kids</Categorie>
+					{this.context.mainData.length <= 1
+						? ''
+						: this.context.mainData.map((categorie) => {
+								{
+									console.log(categorie.name);
+								}
+								return (
+									<Categorie
+										highlighted={
+											this.context.selectedCategorie.toUpperCase() ===
+											categorie.name.toUpperCase()
+												? true
+												: false
+										}
+										onClick={() => {
+											this.context.setSelectedCategorie(
+												categorie.name
+											);
+										}}
+									>
+										{categorie.name}
+									</Categorie>
+								);
+						  })}
 				</LeftSection>
 				<MiddleSection>
 					<LogoContainer>
@@ -85,6 +110,7 @@ export default class Nav extends React.Component {
 						<SelectedCurrencyContainer
 							onClick={() => {
 								this.handleCurrencyModal();
+								this.testClick();
 							}}
 						>
 							<SymbolContainer>$</SymbolContainer>
@@ -100,12 +126,24 @@ export default class Nav extends React.Component {
 					>
 						<Image src={cartLogo} alt="cart image" />
 						{/* current numbler of items */}
-						<CartItemsCounter>3</CartItemsCounter>
+						<CartItemsCounter>
+							{this.context.cart.length}
+						</CartItemsCounter>
 					</CartLogoContainer>
 				</RightSection>
 				<CurrencyOverlayContainer open={this.state.currencyIsOpen}>
 					{/* map all currencies */}
-					<CurrencyItem>$ USD</CurrencyItem>
+					{this.context.mainData.length <= 1
+						? ''
+						: this.context.mainData[0].products[0].prices.map(
+								(price) => (
+									<CurrencyItem>
+										{price.currency.symbol}{' '}
+										{price.currency.label}
+									</CurrencyItem>
+								)
+						  )}
+					{/* <CurrencyItem>$ USD</CurrencyItem> */}
 				</CurrencyOverlayContainer>
 				<CartOverlayContainer
 					open={this.state.cartIsOpen}

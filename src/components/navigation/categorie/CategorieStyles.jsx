@@ -24,4 +24,16 @@ export const Container = styled.div`
 		background-color: #5ece7b;
 		bottom: 0;
 	}
+
+	color: ${(props) => (props.highlighted ? '#5ece7b' : '')};
+	&::after {
+		content: '';
+		transition: all ease 0.3s;
+		position: absolute;
+		width: 100%;
+		height: 2px;
+		background-color: #5ece7b;
+		bottom: 0;
+		display: ${(props) => (props.highlighted ? 'block' : 'none')};
+	}
 `;
