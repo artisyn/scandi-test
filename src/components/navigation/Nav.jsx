@@ -4,6 +4,7 @@ import cartLogo from '../../assets/cartLogo.svg';
 import arrowLogo from '../../assets/arrow.svg';
 import Categorie from './categorie/Categorie';
 import CurrencyItem from './currencyItem/CurrencyItem';
+import { Link } from 'react-router-dom';
 
 import {
 	Container,
@@ -64,24 +65,17 @@ export default class Nav extends React.Component {
 		}
 	};
 
-	testClick = () => {
-		console.log(this.context.mainData);
-	};
-
 	render() {
-		// console.log(this.context.cart);
 		return (
 			<Container>
 				<LeftSection>
 					{/* map all categories */}
 					{this.context.mainData.length <= 1
 						? ''
-						: this.context.mainData.map((categorie) => {
-								{
-									console.log(categorie.name);
-								}
+						: this.context.mainData.map((categorie, i) => {
 								return (
 									<Categorie
+										key={i}
 										highlighted={
 											this.context.selectedCategorie.toUpperCase() ===
 											categorie.name.toUpperCase()
@@ -94,7 +88,15 @@ export default class Nav extends React.Component {
 											);
 										}}
 									>
-										{categorie.name}
+										<Link
+											style={{
+												textDecoration: 'none',
+												color: 'inherit',
+											}}
+											to={`/Shop/categories/${categorie.name}`}
+										>
+											{categorie.name}
+										</Link>
 									</Categorie>
 								);
 						  })}
@@ -110,10 +112,11 @@ export default class Nav extends React.Component {
 						<SelectedCurrencyContainer
 							onClick={() => {
 								this.handleCurrencyModal();
-								this.testClick();
 							}}
 						>
-							<SymbolContainer>$</SymbolContainer>
+							<SymbolContainer>
+								{this.context.selectedCurrency}
+							</SymbolContainer>
 							<ArrowContainer open={this.state.currencyIsOpen}>
 								<Image src={arrowLogo} alt="arrow" />
 							</ArrowContainer>
@@ -135,14 +138,28 @@ export default class Nav extends React.Component {
 					{/* map all currencies */}
 					{this.context.mainData.length <= 1
 						? ''
-						: this.context.mainData[0].products[0].prices.map(
-								(price) => (
-									<CurrencyItem>
+						: this.context.mainData
+								.find(
+									(el) =>
+										el.name.toLowerCase() ===
+										this.context.selectedCategorie.toLowerCase()
+								)
+								.products[0].prices.map((price, i) => (
+									<CurrencyItem
+										key={i}
+										onClick={() => {
+											this.context.setSelectedCurrency(
+												price.currency.symbol
+											);
+											this.setState({
+												currencyIsOpen: false,
+											});
+										}}
+									>
 										{price.currency.symbol}{' '}
 										{price.currency.label}
 									</CurrencyItem>
-								)
-						  )}
+								))}
 					{/* <CurrencyItem>$ USD</CurrencyItem> */}
 				</CurrencyOverlayContainer>
 				<CartOverlayContainer

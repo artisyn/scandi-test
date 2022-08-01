@@ -38,7 +38,8 @@ const client = new ApolloClient({
 class App extends React.Component {
 	// main state
 	state = {
-		selectedCategorie: 'default',
+		selectedCategorie: 'all',
+		selectedCurrency: '$',
 		mainData: [],
 		cart: [],
 	};
@@ -62,10 +63,21 @@ class App extends React.Component {
 			selectedCategorie: cat,
 		});
 	};
+	setSelectedCurrency = (cur) => {
+		this.setState({
+			selectedCurrency: cur,
+		});
+	};
 
 	render() {
-		const { cart, mainData, selectedCategorie } = this.state;
-		const { addToCart, addMainData, setSelectedCategorie } = this;
+		const { cart, mainData, selectedCategorie, selectedCurrency } =
+			this.state;
+		const {
+			addToCart,
+			addMainData,
+			setSelectedCategorie,
+			setSelectedCurrency,
+		} = this;
 		return (
 			<ApolloProvider client={client}>
 				<Container>
@@ -77,12 +89,14 @@ class App extends React.Component {
 							addMainData,
 							selectedCategorie,
 							setSelectedCategorie,
+							selectedCurrency,
+							setSelectedCurrency,
 						}}
 					>
 						<Query query={LOAD_CATEGORIES}>
 							{({ loading, data }) => {
 								if (!loading && mainData.length <= 1) {
-									console.log(data);
+									// console.log(data);
 									this.setState({
 										selectedCategorie:
 											data.categories[0].name,

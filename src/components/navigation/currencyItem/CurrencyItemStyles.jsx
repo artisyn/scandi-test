@@ -5,6 +5,9 @@ export const Container = styled.div`
 	text-align: left;
 	padding-left: 1rem;
 	cursor: pointer;
+	display: flex;
+	align-items: left;
+	gap: 1rem;
 	&:hover {
 		background-color: lightgray;
 	}

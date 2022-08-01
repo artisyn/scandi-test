@@ -12,7 +12,6 @@ export default class CategoriePage extends React.Component {
 	// to be able to consume context
 	static contextType = CartContext;
 	render() {
-		console.log(this.context);
 		return (
 			<Container>
 				<CategorieTitle>
@@ -27,8 +26,11 @@ export default class CategoriePage extends React.Component {
 										el.name ===
 										this.context.selectedCategorie.toLowerCase()
 								)
-								.products.map((product) => (
-									<CategorieItem></CategorieItem>
+								.products.map((product, i) => (
+									<CategorieItem
+										key={i}
+										product={product}
+									></CategorieItem>
 								))}
 				</CategorieItemsContainer>
 			</Container>

@@ -4,7 +4,7 @@ import { Keyframes } from 'styled-components';
 export const Container = styled.div`
 	position: relative;
 	height: 80px;
-	border: 1px solid grey;
+	/* border: 1px solid grey; */
 	display: flex;
 	align-items: center;
 	flex-direction: row;
@@ -47,6 +47,10 @@ export const ArrowContainer = styled.span`
 export const SymbolContainer = styled.span`
 	font-size: 18px;
 	font-weight: 500;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
 `;
 export const CartLogoContainer = styled.div`
 	position: relative;
@@ -124,4 +128,5 @@ export const CurrencyOverlayContainer = styled.div`
 	-webkit-box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
 	-moz-box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
 	box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
+	padding-top: 0.5rem;
 `;
