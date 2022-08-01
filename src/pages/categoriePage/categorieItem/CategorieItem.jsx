@@ -24,6 +24,8 @@ export default class CategorieItem extends React.Component {
 	};
 	handleProductPage = () => {
 		console.log('product page');
+		this.context.setSelectedProduct(this.props.product);
+		console.log(this.context.selectedProduct);
 	};
 	render() {
 		return (
@@ -48,7 +50,6 @@ export default class CategorieItem extends React.Component {
 					<Wrapper
 						onClick={() => {
 							this.handleProductPage();
-							console.log(this.props.product);
 						}}
 					>
 						<Title display1={this.props.product.inStock}>

@@ -38,6 +38,7 @@ const client = new ApolloClient({
 class App extends React.Component {
 	// main state
 	state = {
+		selectedProduct: null,
 		selectedCategorie: 'all',
 		selectedCurrency: '$',
 		mainData: [],
@@ -48,10 +49,87 @@ class App extends React.Component {
 	}
 	// state mutation
 	addToCart = (obj) => {
+		//find if there is a match
+		const index = this.state.cart.findIndex(
+			(el) =>
+				el.product.name === obj.product.name &&
+				el.size === obj.size &&
+				el.color === obj.color &&
+				el.capacity === obj.capacity &&
+				el.usb === obj.usb &&
+				el.touch === obj.touch
+		);
+		console.log(index);
+		// if match update the quantity
+		if (index !== -1) {
+			// make a copy of initial cart
+			let cartCopy = [...this.state.cart];
+			// make a copy of obj to mutate
+			let newCartItem = { ...cartCopy[index] };
+
+			newCartItem.quantity = newCartItem.quantity + 1;
+			cartCopy[index] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+		//if no match add new obj
+		if (index === -1) {
+			this.setState({
+				cart: [...this.state.cart, obj],
+			});
+		}
+	};
+	removeFromCart = (i) => {
+		let cartCopy = [...this.state.cart];
+		cartCopy.slice(i, 1);
 		this.setState({
-			cart: [...this.state.cart, obj],
+			cart: cartCopy,
 		});
 	};
+	changeCartItem = (i, type, change) => {
+		// make a copy of initial cart
+		let cartCopy = [...this.state.cart];
+		// make a copy of obj to mutate
+		let newCartItem = { ...cartCopy[i] };
+
+		if (type === 'color') {
+			newCartItem.color = change;
+			cartCopy[i] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+		if (type === 'size') {
+			newCartItem.size = change;
+			cartCopy[i] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+		if (type === 'capacity') {
+			newCartItem.capacity = change;
+			cartCopy[i] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+		if (type === 'usb') {
+			newCartItem.usb = change;
+			cartCopy[i] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+		if (type === 'touch') {
+			newCartItem.touch = change;
+			cartCopy[i] = newCartItem;
+			this.setState({
+				cart: cartCopy,
+			});
+		}
+	};
+
 	addMainData = (data) => {
 		this.setState({
 			mainData: data,
@@ -68,15 +146,28 @@ class App extends React.Component {
 			selectedCurrency: cur,
 		});
 	};
+	setSelectedProduct = (prod) => {
+		this.setState({
+			selectedProduct: prod,
+		});
+	};
 
 	render() {
-		const { cart, mainData, selectedCategorie, selectedCurrency } =
-			this.state;
+		const {
+			cart,
+			mainData,
+			selectedCategorie,
+			selectedCurrency,
+			selectedProduct,
+		} = this.state;
 		const {
 			addToCart,
+			removeFromCart,
 			addMainData,
 			setSelectedCategorie,
 			setSelectedCurrency,
+			setSelectedProduct,
+			changeCartItem,
 		} = this;
 		return (
 			<ApolloProvider client={client}>
@@ -85,12 +176,16 @@ class App extends React.Component {
 						value={{
 							cart,
 							addToCart,
+							removeFromCart,
 							mainData,
 							addMainData,
 							selectedCategorie,
 							setSelectedCategorie,
 							selectedCurrency,
 							setSelectedCurrency,
+							selectedProduct,
+							setSelectedProduct,
+							changeCartItem,
 						}}
 					>
 						<Query query={LOAD_CATEGORIES}>

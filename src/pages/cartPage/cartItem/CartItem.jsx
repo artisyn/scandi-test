@@ -1,49 +1,49 @@
 import React from 'react';
-import CartContext from '../../context/CartContext';
+import CartContext from '../../../context/CartContext';
 import {
 	Container,
-	Left,
-	Right,
-	Image,
-	BrandAndNameCont,
 	Brand,
+	BrandAndNameCont,
 	Name,
-	SizesContainer,
-	SizeItem,
-	SizeTitle,
-	ColorsContainer,
-	ColorItem,
-	ColorTitle,
 	PriceContainer,
 	PriceItem,
-	PriceTitle,
-	Button,
-	InfoContainer,
-	Middle,
-	SmallImage,
-	SmallImageContainer,
-	StockInfo,
+	ColorItem,
 	ColorItemsContainer,
-	SizeItemsContainer,
+	ColorTitle,
 	ColorWrap,
+	ColorsContainer,
+	SizeItem,
+	SizeItemsContainer,
+	SizeTitle,
+	SizesContainer,
 	CapacityContainer,
-	CapacityItemsContainer,
 	CapacityItem,
+	CapacityItemsContainer,
 	CapacityTitle,
-} from './ProductPageStyles';
+	Left,
+	Right,
+	QuantityContainer,
+	TopButton,
+	MiddleQuantity,
+	BottomButton,
+	CarouselContainer,
+	Carousel,
+	Image,
+	ArrowLeft,
+	ArrowRight,
+} from '../cartItem/CartItemStyles';
 
-export default class ProductPage extends React.Component {
+export default class CartItem extends React.Component {
 	// to be able to consume context
 	static contextType = CartContext;
 	state = {
 		pictureIndex: 0,
-		size: 0,
-		color: 0,
-		capacity: 0,
-		usb: 0,
-		touch: 0,
+		size: this.props.item.size,
+		color: this.props.item.color,
+		capacity: this.props.item.capacity,
+		usb: this.props.item.usb,
+		touch: this.props.item.touch,
 	};
-
 	setPictureIndex = (i) => {
 		this.setState({
 			pictureIndex: i,
@@ -53,94 +53,73 @@ export default class ProductPage extends React.Component {
 		this.setState({
 			size: size,
 		});
+		this.context.changeCartItem(this.props.index, 'size', size);
 	};
 	setColor = (color) => {
 		this.setState({
 			color: color,
 		});
+		this.context.changeCartItem(this.props.index, 'color', color);
 	};
 
 	setCapacity = (capacity) => {
 		this.setState({
 			capacity: capacity,
 		});
+		this.context.changeCartItem(this.props.index, 'capacity', capacity);
 	};
 	setUsb = (boolean) => {
 		this.setState({
 			usb: boolean,
 		});
+		this.context.changeCartItem(this.props.index, 'usb', boolean);
 	};
 	setTouch = (boolean) => {
 		this.setState({
 			touch: boolean,
 		});
+		this.context.changeCartItem(this.props.index, 'touch', boolean);
 	};
-
 	checkForAttribute = (attr) => {
-		let x = this.context.selectedProduct.attributes.find(
+		let x = this.props.item.product.attributes.find(
 			(el) => el.name === attr
 		);
 		if (x) return true;
 		if (!x) return false;
 	};
-	// make it happen
-	addToCart = () => {
-		const x = {
-			product: this.context.selectedProduct,
-			size: this.state.size,
-			color: this.state.color,
-			capacity: this.state.capacity,
-			usb: this.state.usb,
-			touch: this.state.touch,
-			quantity: 1,
-		};
-		this.context.addToCart(x);
-	};
-
 	render() {
 		return (
 			<Container>
 				<Left>
-					{/* map through images */}
-					{this.context.selectedProduct === null
-						? ''
-						: this.context.selectedProduct.gallery.map((el, i) => (
-								<SmallImageContainer
-									key={i}
-									onClick={() => {
-										this.setPictureIndex(i);
-									}}
-								>
-									<SmallImage src={el} alt="product image" />
-								</SmallImageContainer>
-						  ))}
-				</Left>
-				<Middle>
-					<StockInfo display1={this.context.selectedProduct?.inStock}>
-						OUT OF STOCK
-					</StockInfo>
-					<Image
-						src={
-							this.context.selectedProduct === null
-								? ''
-								: this.context.selectedProduct.gallery[
-										this.state.pictureIndex
-								  ]
-						}
-					/>
-				</Middle>
-				<Right>
 					<BrandAndNameCont>
-						<Brand>{this.context.selectedProduct?.brand}</Brand>
-						<Name>{this.context.selectedProduct?.name}</Name>
+						<Brand>{this.props.item.product.brand}</Brand>
+						<Name>{this.props.item.product.name}</Name>
 					</BrandAndNameCont>
+					<PriceContainer>
+						<PriceItem>
+							{
+								this.props.item.product.prices.find(
+									(el) =>
+										el.currency.symbol ==
+										this.context.selectedCurrency
+								).currency.symbol
+							}{' '}
+							{
+								this.props.item.product.prices.find(
+									(el) =>
+										el.currency.symbol ==
+										this.context.selectedCurrency
+								)?.amount
+							}
+						</PriceItem>
+					</PriceContainer>
 
 					{/* Size Block */}
 					{this.checkForAttribute('Size') ? (
 						<SizesContainer>
 							<SizeTitle>SIZE:</SizeTitle>
 							<SizeItemsContainer>
-								{this.context.selectedProduct.attributes
+								{this.props.item.product.attributes
 									.find((el) => el.name === 'Size')
 									.items.map((el, i) => (
 										<SizeItem
@@ -158,12 +137,13 @@ export default class ProductPage extends React.Component {
 					) : (
 						''
 					)}
+
 					{/* Color Block */}
 					{this.checkForAttribute('Color') ? (
 						<ColorsContainer>
 							<ColorTitle>COLOR:</ColorTitle>
 							<ColorItemsContainer>
-								{this.context.selectedProduct.attributes
+								{this.props.item.product.attributes
 									.find((el) => el.name === 'Color')
 									.items.map((el, i) => (
 										<ColorWrap
@@ -188,7 +168,7 @@ export default class ProductPage extends React.Component {
 						<CapacityContainer>
 							<CapacityTitle>CAPACITY:</CapacityTitle>
 							<CapacityItemsContainer>
-								{this.context.selectedProduct.attributes
+								{this.props.item.product.attributes
 									.find((el) => el.name === 'Capacity')
 									.items.map((el, i) => (
 										<CapacityItem
@@ -206,12 +186,13 @@ export default class ProductPage extends React.Component {
 					) : (
 						''
 					)}
+
 					{/* With USB 3 ports Block */}
 					{this.checkForAttribute('With USB 3 ports') ? (
 						<CapacityContainer>
 							<CapacityTitle>WITH USB 3 PORTS:</CapacityTitle>
 							<CapacityItemsContainer>
-								{this.context.selectedProduct.attributes
+								{this.props.item.product.attributes
 									.find(
 										(el) => el.name === 'With USB 3 ports'
 									)
@@ -231,12 +212,13 @@ export default class ProductPage extends React.Component {
 					) : (
 						''
 					)}
+
 					{/* Touch ID in keyboard */}
 					{this.checkForAttribute('With USB 3 ports') ? (
 						<CapacityContainer>
 							<CapacityTitle>TOUCH ID IN KEYBOARD:</CapacityTitle>
 							<CapacityItemsContainer>
-								{this.context.selectedProduct.attributes
+								{this.props.item.product.attributes
 									.find(
 										(el) =>
 											el.name === 'Touch ID in keyboard'
@@ -257,38 +239,23 @@ export default class ProductPage extends React.Component {
 					) : (
 						''
 					)}
-
-					<PriceContainer>
-						<PriceTitle>PRICE:</PriceTitle>
-						<PriceItem>
-							{
-								this.context.selectedProduct.prices.find(
-									(el) =>
-										el.currency.symbol ==
-										this.context.selectedCurrency
-								).currency.symbol
-							}{' '}
-							{
-								this.context.selectedProduct.prices.find(
-									(el) =>
-										el.currency.symbol ==
-										this.context.selectedCurrency
-								).amount
-							}
-						</PriceItem>
-					</PriceContainer>
-					<Button
-						onClick={() => {
-							this.addToCart();
-						}}
-					>
-						ADD TO CART
-					</Button>
-					<InfoContainer
-						dangerouslySetInnerHTML={{
-							__html: `${this.context.selectedProduct.description}`,
-						}}
-					></InfoContainer>
+				</Left>
+				<Right>
+					<QuantityContainer>
+						<TopButton>+</TopButton>
+						<MiddleQuantity>
+							{this.props.item.quantity}
+						</MiddleQuantity>
+						<BottomButton>-</BottomButton>
+					</QuantityContainer>
+					<CarouselContainer>
+						<ArrowLeft>{`<`}</ArrowLeft>
+						<Carousel>
+							{/* map through imgs */}
+							<Image alt="product image" />
+						</Carousel>
+						<ArrowRight>{'>'}</ArrowRight>
+					</CarouselContainer>
 				</Right>
 			</Container>
 		);

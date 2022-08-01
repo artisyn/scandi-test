@@ -165,7 +165,20 @@ export default class Nav extends React.Component {
 				<CartOverlayContainer
 					open={this.state.cartIsOpen}
 					animation={this.state.animationStart}
-				></CartOverlayContainer>
+				>
+					<Link
+						onClick={() => {
+							this.handelCartModal();
+						}}
+						style={{
+							textDecoration: 'none',
+							color: 'inherit',
+						}}
+						to={`/Shop/cart`}
+					>
+						View Cart
+					</Link>
+				</CartOverlayContainer>
 				<CartModalDimmer
 					open={this.state.cartIsOpen}
 					animation={this.state.animationStart}
