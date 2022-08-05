@@ -23,9 +23,7 @@ export default class CategorieItem extends React.Component {
 		console.log('addedToCart');
 	};
 	handleProductPage = () => {
-		console.log('product page');
 		this.context.setSelectedProduct(this.props.product);
-		console.log(this.context.selectedProduct);
 	};
 	render() {
 		return (

@@ -125,7 +125,7 @@ export const CapacityItem = styled.span`
 `;
 export const Right = styled.div`
 	max-width: fit-content;
-	border: 1px solid black;
+
 	min-height: 100%;
 	display: flex;
 	gap: 0.5rem;
@@ -136,7 +136,7 @@ export const Right = styled.div`
 
 export const QuantityContainer = styled.div`
 	flex: 1;
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -144,14 +144,81 @@ export const QuantityContainer = styled.div`
 	max-height: 20rem;
 `;
 
-export const TopButton = styled.button``;
-export const MiddleQuantity = styled.span``;
-export const BottomButton = styled.button``;
+export const TopButton = styled.button`
+	width: 45px;
+	height: 45px;
+	background: none;
+	outline: none;
+	border: 1px solid #1d1f22;
+	cursor: pointer;
+	font-size: 1.2rem;
+`;
+export const MiddleQuantity = styled.span`
+	width: 45px;
+	height: 45px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 500;
+	font-size: 24px;
+`;
+export const BottomButton = styled.button`
+	width: 45px;
+	height: 45px;
+	background: none;
+	outline: none;
+	border: 1px solid #1d1f22;
+	cursor: pointer;
+	font-size: 1.2rem;
+`;
 
 export const CarouselContainer = styled.div`
 	overflow: hidden;
+	position: relative;
+	height: 100%;
+	height: 288px;
+	width: 200px;
 `;
-export const Carousel = styled.div``;
-export const Image = styled.img``;
-export const ArrowLeft = styled.span``;
-export const ArrowRight = styled.span``;
+export const Carousel = styled.div`
+	translate: all ease 0.4s;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	transform: translateX(${(props) => -200 * props.index}px);
+`;
+export const Image = styled.img`
+	height: 100%;
+	min-width: 200px;
+	object-fit: contain;
+	object-position: center;
+`;
+export const ArrowLeft = styled.div`
+	width: 24px;
+	height: 24px;
+	color: white;
+	background-color: black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	bottom: 1rem;
+	right: 3rem;
+	cursor: pointer;
+	z-index: 5;
+`;
+export const ArrowRight = styled.div`
+	z-index: 5;
+	width: 24px;
+	height: 24px;
+	color: white;
+	background-color: black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	cursor: pointer;
+`;

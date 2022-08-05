@@ -184,6 +184,31 @@ export const PriceItem = styled.span`
 	font-weight: 700;
 	font-size: 24px;
 `;
+export const ButtonContainer = styled.div`
+	width: fit-content;
+	position: relative;
+	&:before {
+		content: 'Added To Cart !';
+		transition: opacity ease 1s;
+		position: absolute;
+		color: #5ece7b;
+		font-size: 1.1rem;
+		top: -1.5rem;
+		width: 100%;
+		text-align: center;
+		opacity: ${(props) => (props.added ? '1' : '0')};
+	}
+	&:after {
+		content: 'Out Of Stock !';
+		position: absolute;
+		color: #ce5e5e;
+		font-size: 1.1rem;
+		top: -1.5rem;
+		width: 100%;
+		text-align: center;
+		display: ${(props) => (props.display1 ? 'block' : 'none')};
+	}
+`;
 
 export const Button = styled.button`
 	outline: none;

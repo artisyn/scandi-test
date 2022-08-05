@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Keyframes } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
 	position: relative;
@@ -38,6 +39,7 @@ export const SelectedCurrencyContainer = styled.div`
 `;
 
 export const ArrowContainer = styled.span`
+	pointer-events: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -45,6 +47,7 @@ export const ArrowContainer = styled.span`
 	transform: rotate(${(props) => (props.open ? 0 : 180)}deg);
 `;
 export const SymbolContainer = styled.span`
+	pointer-events: none;
 	font-size: 18px;
 	font-weight: 500;
 	display: flex;
@@ -107,11 +110,11 @@ export const CartModalDimmer = styled.div`
 	height: calc(100vh - 81px);
 	top: 80px;
 	left: 0;
-	z-index: 8;
+	z-index: 100;
 	background-color: #000000ad;
 `;
 export const CurrencyOverlayContainer = styled.div`
-	z-index: 20;
+	z-index: 106;
 	animation: ${(props) => (props.open ? fadeInAnimation : fadeOutAnimation)}
 		ease 0.7s;
 	display: ${(props) => (props.open ? 'flex' : 'none')};
@@ -129,4 +132,9 @@ export const CurrencyOverlayContainer = styled.div`
 	-moz-box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
 	box-shadow: 0px 0px 41px 5px rgba(246, 246, 246, 1);
 	padding-top: 0.5rem;
+`;
+export const CustomLink = styled(Link)`
+	text-decoration: none;
+	color: inherit;
+	height: 100%;
 `;

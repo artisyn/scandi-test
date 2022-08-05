@@ -47,7 +47,14 @@ class App extends React.Component {
 	componentDidMount() {
 		// fetch data
 	}
+
 	// state mutation
+
+	checkTotal = () => {
+		const x = this.state.cart.reduce((acu, el, i) => {
+			return el.total + acu;
+		}, 0);
+	};
 	addToCart = (obj) => {
 		//find if there is a match
 		const index = this.state.cart.findIndex(
@@ -59,7 +66,7 @@ class App extends React.Component {
 				el.usb === obj.usb &&
 				el.touch === obj.touch
 		);
-		console.log(index);
+
 		// if match update the quantity
 		if (index !== -1) {
 			// make a copy of initial cart
@@ -82,7 +89,43 @@ class App extends React.Component {
 	};
 	removeFromCart = (i) => {
 		let cartCopy = [...this.state.cart];
-		cartCopy.slice(i, 1);
+		cartCopy.splice(i, 1);
+		this.setState({
+			cart: cartCopy,
+		});
+	};
+	incrementCartItem = (i) => {
+		// make a copy of initial cart
+		let cartCopy = [...this.state.cart];
+		// make a copy of obj to mutate
+		let newCartItem = { ...cartCopy[i] };
+		newCartItem.quantity = newCartItem.quantity + 1;
+		cartCopy[i] = newCartItem;
+		this.setState({
+			cart: cartCopy,
+		});
+	};
+	decrementCartItem = (i) => {
+		// make a copy of initial cart
+		let cartCopy = [...this.state.cart];
+		// make a copy of obj to mutate
+		let newCartItem = { ...cartCopy[i] };
+
+		// make a choice to delete or not
+		if (newCartItem.quantity === 1) {
+			const choice = window.confirm('Remove Item From Cart ?');
+			if (choice) {
+				this.removeFromCart(i);
+				console.log(this.state.cart);
+				return;
+			}
+			if (!choice) {
+				return;
+			}
+		}
+
+		newCartItem.quantity = newCartItem.quantity - 1;
+		cartCopy[i] = newCartItem;
 		this.setState({
 			cart: cartCopy,
 		});
@@ -168,10 +211,12 @@ class App extends React.Component {
 			setSelectedCurrency,
 			setSelectedProduct,
 			changeCartItem,
+			incrementCartItem,
+			decrementCartItem,
 		} = this;
 		return (
 			<ApolloProvider client={client}>
-				<Container>
+				<Container id="main">
 					<CartContext.Provider
 						value={{
 							cart,
@@ -186,8 +231,11 @@ class App extends React.Component {
 							selectedProduct,
 							setSelectedProduct,
 							changeCartItem,
+							incrementCartItem,
+							decrementCartItem,
 						}}
 					>
+						{/* I know this is bad solution, but it is the only one I found without hooks */}
 						<Query query={LOAD_CATEGORIES}>
 							{({ loading, data }) => {
 								if (!loading && mainData.length <= 1) {

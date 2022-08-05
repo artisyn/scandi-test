@@ -30,6 +30,7 @@ import {
 	CapacityItemsContainer,
 	CapacityItem,
 	CapacityTitle,
+	ButtonContainer,
 } from './ProductPageStyles';
 
 export default class ProductPage extends React.Component {
@@ -42,6 +43,7 @@ export default class ProductPage extends React.Component {
 		capacity: 0,
 		usb: 0,
 		touch: 0,
+		added: false,
 	};
 
 	setPictureIndex = (i) => {
@@ -76,6 +78,17 @@ export default class ProductPage extends React.Component {
 		});
 	};
 
+	setAdded = () => {
+		this.setState({
+			added: !this.state.added,
+		});
+		setTimeout(() => {
+			this.setState({
+				added: !this.state.added,
+			});
+		}, 1000);
+	};
+
 	checkForAttribute = (attr) => {
 		let x = this.context.selectedProduct.attributes.find(
 			(el) => el.name === attr
@@ -95,6 +108,7 @@ export default class ProductPage extends React.Component {
 			quantity: 1,
 		};
 		this.context.addToCart(x);
+		this.setAdded();
 	};
 
 	render() {
@@ -277,13 +291,20 @@ export default class ProductPage extends React.Component {
 							}
 						</PriceItem>
 					</PriceContainer>
-					<Button
-						onClick={() => {
-							this.addToCart();
-						}}
+					<ButtonContainer
+						added={this.state.added}
+						display1={!this.context.selectedProduct.inStock}
 					>
-						ADD TO CART
-					</Button>
+						<Button
+							disabled={!this.context.selectedProduct.inStock}
+							onClick={() => {
+								this.addToCart();
+							}}
+						>
+							ADD TO CART
+						</Button>
+					</ButtonContainer>
+
 					<InfoContainer
 						dangerouslySetInnerHTML={{
 							__html: `${this.context.selectedProduct.description}`,

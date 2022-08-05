@@ -22,8 +22,10 @@ import {
 	ArrowContainer,
 	CartItemsCounter,
 	CartModalDimmer,
+	CustomLink,
 } from './NavStyles';
 import CartContext from '../../context/CartContext';
+import CartOverlay from './cartOverlay/CartOverlay';
 
 export default class Nav extends React.Component {
 	// to be able to consume context
@@ -33,12 +35,23 @@ export default class Nav extends React.Component {
 		cartIsOpen: false,
 		currencyIsOpen: false,
 	};
+	currencyRef = React.createRef();
 
 	handleCurrencyModal = () => {
 		this.setState({
-			// cartIsOpen: false,
 			currencyIsOpen: !this.state.currencyIsOpen,
 		});
+	};
+	handleCartModalOpen = () => {
+		if (!this.state.cartIsOpen) {
+			this.setState({
+				animationStart: !this.state.animationStart,
+				cartIsOpen: !this.state.cartIsOpen,
+				currencyIsOpen: false,
+			});
+
+			return;
+		}
 	};
 	handelCartModal = () => {
 		if (!this.state.cartIsOpen) {
@@ -47,6 +60,7 @@ export default class Nav extends React.Component {
 				cartIsOpen: !this.state.cartIsOpen,
 				currencyIsOpen: false,
 			});
+
 			return;
 		}
 		if (this.state.cartIsOpen) {
@@ -61,6 +75,7 @@ export default class Nav extends React.Component {
 					currencyIsOpen: false,
 				});
 			}, 700);
+
 			return;
 		}
 	};
@@ -74,30 +89,26 @@ export default class Nav extends React.Component {
 						? ''
 						: this.context.mainData.map((categorie, i) => {
 								return (
-									<Categorie
+									<CustomLink
 										key={i}
-										highlighted={
-											this.context.selectedCategorie.toUpperCase() ===
-											categorie.name.toUpperCase()
-												? true
-												: false
-										}
-										onClick={() => {
-											this.context.setSelectedCategorie(
-												categorie.name
-											);
-										}}
+										to={`/Shop/categories/${categorie.name}`}
 									>
-										<Link
-											style={{
-												textDecoration: 'none',
-												color: 'inherit',
+										<Categorie
+											highlighted={
+												this.context.selectedCategorie.toUpperCase() ===
+												categorie.name.toUpperCase()
+													? true
+													: false
+											}
+											onClick={() => {
+												this.context.setSelectedCategorie(
+													categorie.name
+												);
 											}}
-											to={`/Shop/categories/${categorie.name}`}
 										>
 											{categorie.name}
-										</Link>
-									</Categorie>
+										</Categorie>
+									</CustomLink>
 								);
 						  })}
 				</LeftSection>
@@ -110,6 +121,7 @@ export default class Nav extends React.Component {
 					<CurrencyContainer>
 						{/* selected currency */}
 						<SelectedCurrencyContainer
+							ref={this.currencyRef}
 							onClick={() => {
 								this.handleCurrencyModal();
 							}}
@@ -124,7 +136,7 @@ export default class Nav extends React.Component {
 					</CurrencyContainer>
 					<CartLogoContainer
 						onClick={() => {
-							this.handelCartModal();
+							this.handleCartModalOpen();
 						}}
 					>
 						<Image src={cartLogo} alt="cart image" />
@@ -160,25 +172,14 @@ export default class Nav extends React.Component {
 										{price.currency.label}
 									</CurrencyItem>
 								))}
-					{/* <CurrencyItem>$ USD</CurrencyItem> */}
 				</CurrencyOverlayContainer>
-				<CartOverlayContainer
+
+				<CartOverlay
 					open={this.state.cartIsOpen}
 					animation={this.state.animationStart}
-				>
-					<Link
-						onClick={() => {
-							this.handelCartModal();
-						}}
-						style={{
-							textDecoration: 'none',
-							color: 'inherit',
-						}}
-						to={`/Shop/cart`}
-					>
-						View Cart
-					</Link>
-				</CartOverlayContainer>
+					changeState={this.handelCartModal}
+					curRef={this.currencyRef.current}
+				></CartOverlay>
 				<CartModalDimmer
 					open={this.state.cartIsOpen}
 					animation={this.state.animationStart}

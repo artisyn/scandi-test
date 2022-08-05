@@ -44,11 +44,40 @@ export default class CartItem extends React.Component {
 		usb: this.props.item.usb,
 		touch: this.props.item.touch,
 	};
-	setPictureIndex = (i) => {
-		this.setState({
-			pictureIndex: i,
-		});
+	incrementIndex = () => {
+		if (
+			this.state.pictureIndex >=
+			this.props.item.product.gallery.length - 1
+		) {
+			this.setState({
+				pictureIndex: 0,
+			});
+		}
+		if (
+			this.state.pictureIndex <
+			this.props.item.product.gallery.length - 1
+		) {
+			this.setState({
+				pictureIndex: this.state.pictureIndex + 1,
+			});
+		}
 	};
+
+	decrementIndex = () => {
+		if (this.state.pictureIndex === 0) {
+			this.setState({
+				pictureIndex: this.props.item.product.gallery.length - 1,
+			});
+		}
+		if (this.state.pictureIndex !== 0) {
+			this.setState({
+				pictureIndex: this.state.pictureIndex - 1,
+			});
+		}
+	};
+	setCountPlus = () => {};
+	setCountMinus = () => {};
+
 	setSize = (size) => {
 		this.setState({
 			size: size,
@@ -87,6 +116,7 @@ export default class CartItem extends React.Component {
 		if (x) return true;
 		if (!x) return false;
 	};
+
 	render() {
 		return (
 			<Container>
@@ -242,19 +272,47 @@ export default class CartItem extends React.Component {
 				</Left>
 				<Right>
 					<QuantityContainer>
-						<TopButton>+</TopButton>
+						<TopButton
+							onClick={() => {
+								this.context.incrementCartItem(
+									this.props.index
+								);
+							}}
+						>
+							+
+						</TopButton>
 						<MiddleQuantity>
 							{this.props.item.quantity}
 						</MiddleQuantity>
-						<BottomButton>-</BottomButton>
+						<BottomButton
+							onClick={() => {
+								this.context.decrementCartItem(
+									this.props.index
+								);
+							}}
+						>
+							-
+						</BottomButton>
 					</QuantityContainer>
 					<CarouselContainer>
-						<ArrowLeft>{`<`}</ArrowLeft>
-						<Carousel>
+						<ArrowLeft
+							onClick={() => {
+								this.decrementIndex();
+							}}
+						>{`<`}</ArrowLeft>
+						<Carousel index={this.state.pictureIndex}>
 							{/* map through imgs */}
-							<Image alt="product image" />
+							{this.props.item.product.gallery.map((el, i) => (
+								<Image key={i} alt="product image" src={el} />
+							))}
 						</Carousel>
-						<ArrowRight>{'>'}</ArrowRight>
+						<ArrowRight
+							onClick={() => {
+								this.incrementIndex();
+							}}
+						>
+							{'>'}
+						</ArrowRight>
 					</CarouselContainer>
 				</Right>
 			</Container>
