@@ -19,13 +19,14 @@ export const CartIconContainer = styled.div`
 	&::after {
 		position: absolute;
 		content: 'Add To Cart';
+
+		opacity: 0;
+		transition: all ease 0.4s;
 		width: 8rem;
 		font-size: 0.8rem;
 		color: #5ece7b;
 		bottom: -1rem;
 		left: -0.4rem;
-		opacity: 0;
-		transition: opacity ease 0.5s;
 	}
 	&:hover::after {
 		opacity: 1;
@@ -91,6 +92,22 @@ export const StockInfo = styled.span`
 	font-size: 24px;
 	color: #8d8f9a;
 	display: ${(props) => (props.display1 ? 'none' : 'flex')};
+`;
+export const AddToCartInfo = styled.span`
+	position: absolute;
+	z-index: 4;
+	top: 50%;
+	width: 100%;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	color: #5ece7b;
+
+	transition: all ease 1s;
+
+	opacity: ${(props) => (props.animate ? '1' : '0')};
 `;
 
 export const Wrapper = styled.div`

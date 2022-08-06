@@ -107,7 +107,7 @@ export const CartModalDimmer = styled.div`
 	display: ${(props) => (props.open ? 'block' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: calc(100vh - 81px);
+	height: calc(100vh - 80px);
 	top: 80px;
 	left: 0;
 	z-index: 100;

@@ -96,7 +96,7 @@ export default class ProductPage extends React.Component {
 		if (x) return true;
 		if (!x) return false;
 	};
-	// make it happen
+
 	addToCart = () => {
 		const x = {
 			product: this.context.selectedProduct,

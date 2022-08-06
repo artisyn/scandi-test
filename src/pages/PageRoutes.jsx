@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import CartPage from './cartPage/CartPage';
 import CategoriePage from './categoriePage/CategoriePage';
+import OrderPage from './orderPage/OrderPage';
 import ProductPage from './productPage/ProductPage';
 
 export default class PageRoutes extends React.Component {
@@ -17,6 +18,7 @@ export default class PageRoutes extends React.Component {
 					element={<ProductPage />}
 				/>
 				<Route path="/Shop/cart" element={<CartPage />} />
+				<Route path="/Shop/order" element={<OrderPage />} />
 
 				<Route
 					path="*"

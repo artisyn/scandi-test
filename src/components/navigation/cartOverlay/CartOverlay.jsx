@@ -6,6 +6,12 @@ import {
 	Title,
 	TitleContainer,
 	TitleItem,
+	ButtonsContainer,
+	ViewButton,
+	CheckoutButton,
+	TotalContainer,
+	TotalPrice,
+	TotalTitle,
 } from './CartOverlayStyles';
 import OverlayItem from './overlayItem/OverlayItem';
 
@@ -19,43 +25,42 @@ export default class CartOverlay extends React.Component {
 
 	handleClick = (e) => {
 		const el = this.modalRef.current;
-		if (!el || el.contains(e.target) || e.target === this.props.curRef)
+		if (
+			!el ||
+			el.contains(e.target) ||
+			e.target === this.props.curRef ||
+			e.srcElement.localName == 'button'
+		)
 			return;
 
 		if (!el.contains(e.target)) {
 			this.props.changeState();
 		}
 	};
-	preventScroll = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
 
-		return false;
-	};
-	handleScroll = (e) => {
+	preventScroll = (e) => {
 		document.body.style.overflowY = 'hidden';
+	};
+	allowScroll = (e) => {
+		document.body.style.overflowY = 'visible';
 	};
 	componentDidUpdate() {
 		if (this.props.open) {
+			this.preventScroll();
+			this.modalRef.current.style.overflowY = 'scroll';
+
 			setTimeout(() => {
 				window.addEventListener('click', this.handleClick);
-				window.addEventListener('wheel', this.preventScroll, {
-					passive: false,
-				});
 			}, 300);
 		}
 		if (!this.props.open) {
 			window.removeEventListener('click', this.handleClick);
-			window.removeEventListener('wheel', this.preventScroll, {
-				passive: false,
-			});
+
+			this.allowScroll();
 		}
 	}
 	componentWillUnmount() {
 		window.removeEventListener('click', this.handleClick);
-		window.removeEventListener('wheel', this.preventScroll, {
-			passive: false,
-		});
 	}
 	render() {
 		return (
@@ -73,17 +78,72 @@ export default class CartOverlay extends React.Component {
 						items
 					</TitleItem>
 				</TitleContainer>
+
 				{this.context.cart.map((el, i) => (
 					<OverlayItem key={i} index={i} item={el} />
 				))}
-				<CustomLink
-					onClick={() => {
-						this.props.changeState();
-					}}
-					to={`/Shop/cart`}
-				>
-					View Cart
-				</CustomLink>
+
+				{this.context.cart.length < 1 ? (
+					''
+				) : (
+					<TotalContainer>
+						<TotalTitle>Total:</TotalTitle>
+						<TotalPrice>
+							{this.context.selectedCurrency}{' '}
+							{this.context.cart
+								.reduce((acu, el, i) => {
+									const quantity = el.quantity;
+									const itemPrice = el.product.prices.find(
+										(el) =>
+											el.currency.symbol ==
+											this.context.selectedCurrency
+									)?.amount;
+									return acu + quantity * itemPrice;
+								}, 0)
+								.toFixed(2)}
+						</TotalPrice>
+					</TotalContainer>
+				)}
+
+				<ButtonsContainer>
+					<CustomLink
+						onClick={() => {
+							this.props.changeState();
+						}}
+						to={`/Shop/cart`}
+					>
+						<ViewButton>View Cart</ViewButton>
+					</CustomLink>
+
+					{this.context.cart.length < 1 ? (
+						''
+					) : (
+						<CustomLink
+							onClick={() => {
+								this.props.changeState();
+
+								const order = this.context.cart.reduce(
+									(acu, el) => {
+										const orderItem = {
+											name: el.product.name,
+											brand: el.product.brand,
+											quantity: el.quantity,
+											prices: el.product.prices,
+										};
+										acu.push(orderItem);
+										return acu;
+									},
+									[]
+								);
+								this.context.setOrder(order);
+								this.context.clearCart();
+							}}
+							to={`/Shop/order`}
+						>
+							<CheckoutButton>CHECK OUT</CheckoutButton>
+						</CustomLink>
+					)}
+				</ButtonsContainer>
 			</Container>
 		);
 	}

@@ -19,6 +19,12 @@ import PageRoutes from './pages/PageRoutes';
 const Container = styled.div`
 	min-height: 100vh;
 `;
+const Message = styled.span`
+	position: absolute;
+	top: 10rem;
+	width: 100%;
+	text-align: center;
+`;
 
 // Apollo logic
 const errorLink = onError(({ graphqlErrors, networkError }) => {
@@ -38,11 +44,13 @@ const client = new ApolloClient({
 class App extends React.Component {
 	// main state
 	state = {
+		tax: 21,
 		selectedProduct: null,
 		selectedCategorie: 'all',
 		selectedCurrency: '$',
 		mainData: [],
 		cart: [],
+		order: [],
 	};
 	componentDidMount() {
 		// fetch data
@@ -116,7 +124,7 @@ class App extends React.Component {
 			const choice = window.confirm('Remove Item From Cart ?');
 			if (choice) {
 				this.removeFromCart(i);
-				console.log(this.state.cart);
+
 				return;
 			}
 			if (!choice) {
@@ -173,6 +181,12 @@ class App extends React.Component {
 		}
 	};
 
+	clearCart = () => {
+		this.setState({
+			cart: [],
+		});
+	};
+
 	addMainData = (data) => {
 		this.setState({
 			mainData: data,
@@ -194,14 +208,21 @@ class App extends React.Component {
 			selectedProduct: prod,
 		});
 	};
+	setOrder = (load) => {
+		this.setState({
+			order: load,
+		});
+	};
 
 	render() {
 		const {
+			tax,
 			cart,
 			mainData,
 			selectedCategorie,
 			selectedCurrency,
 			selectedProduct,
+			order,
 		} = this.state;
 		const {
 			addToCart,
@@ -213,12 +234,15 @@ class App extends React.Component {
 			changeCartItem,
 			incrementCartItem,
 			decrementCartItem,
+			setOrder,
+			clearCart,
 		} = this;
 		return (
 			<ApolloProvider client={client}>
 				<Container id="main">
 					<CartContext.Provider
 						value={{
+							tax,
 							cart,
 							addToCart,
 							removeFromCart,
@@ -233,23 +257,33 @@ class App extends React.Component {
 							changeCartItem,
 							incrementCartItem,
 							decrementCartItem,
+							order,
+							setOrder,
+							clearCart,
 						}}
 					>
 						{/* I know this is bad solution, but it is the only one I found without hooks */}
 						<Query query={LOAD_CATEGORIES}>
 							{({ loading, data }) => {
-								if (!loading && mainData.length <= 1) {
-									// console.log(data);
+								if (!loading && mainData?.length <= 1) {
 									this.setState({
 										selectedCategorie:
-											data.categories[0].name,
-										mainData: data.categories,
+											data?.categories[0]?.name,
+										mainData: data?.categories,
 									});
 								}
 							}}
 						</Query>
 						<Nav />
 						<PageRoutes />
+						{this.state.mainData?.length < 1 ||
+						this.state.mainData === undefined ? (
+							<Message>
+								Data IS Not Available, Please Check Endpoint.
+							</Message>
+						) : (
+							''
+						)}
 					</CartContext.Provider>
 				</Container>
 			</ApolloProvider>

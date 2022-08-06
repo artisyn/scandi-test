@@ -15,16 +15,16 @@ export default class CategoriePage extends React.Component {
 		return (
 			<Container>
 				<CategorieTitle>
-					{this.context.selectedCategorie.toUpperCase()}
+					{this.context.selectedCategorie?.toUpperCase()}
 				</CategorieTitle>
 				<CategorieItemsContainer>
-					{this.context.mainData.length <= 1
+					{this.context.mainData?.length <= 1
 						? ''
 						: this.context.mainData
-								.find(
+								?.find(
 									(el) =>
 										el.name ===
-										this.context.selectedCategorie.toLowerCase()
+										this.context.selectedCategorie?.toLowerCase()
 								)
 								.products.map((product, i) => (
 									<CategorieItem

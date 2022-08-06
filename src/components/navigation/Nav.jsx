@@ -16,7 +16,6 @@ import {
 	CurrencyContainer,
 	CartLogoContainer,
 	CurrencyOverlayContainer,
-	CartOverlayContainer,
 	SelectedCurrencyContainer,
 	SymbolContainer,
 	ArrowContainer,
@@ -85,9 +84,9 @@ export default class Nav extends React.Component {
 			<Container>
 				<LeftSection>
 					{/* map all categories */}
-					{this.context.mainData.length <= 1
+					{this.context.mainData?.length <= 1
 						? ''
-						: this.context.mainData.map((categorie, i) => {
+						: this.context.mainData?.map((categorie, i) => {
 								return (
 									<CustomLink
 										key={i}
@@ -142,16 +141,18 @@ export default class Nav extends React.Component {
 						<Image src={cartLogo} alt="cart image" />
 						{/* current numbler of items */}
 						<CartItemsCounter>
-							{this.context.cart.length}
+							{this.context.cart.reduce((acu, el) => {
+								return acu + +el.quantity;
+							}, 0)}
 						</CartItemsCounter>
 					</CartLogoContainer>
 				</RightSection>
 				<CurrencyOverlayContainer open={this.state.currencyIsOpen}>
 					{/* map all currencies */}
-					{this.context.mainData.length <= 1
+					{this.context.mainData?.length <= 1
 						? ''
 						: this.context.mainData
-								.find(
+								?.find(
 									(el) =>
 										el.name.toLowerCase() ===
 										this.context.selectedCategorie.toLowerCase()

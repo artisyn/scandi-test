@@ -13,14 +13,38 @@ import {
 	PictureDimmer,
 	Wrapper,
 	StyledLink,
+	AddToCartInfo,
 	CartIconContainer,
 } from '../categorieItem/CategorieItemStyles';
 
 export default class CategorieItem extends React.Component {
 	// to be able to consume context
 	static contextType = CartContext;
+	state = {
+		animate: false,
+	};
+
+	setAnimate = () => {
+		this.setState({
+			animate: !this.state.animate,
+		});
+	};
 	handleAddToCart = () => {
-		console.log('addedToCart');
+		const x = {
+			product: this.props.product,
+			size: 0,
+			color: 0,
+			capacity: 0,
+			usb: 0,
+			touch: 0,
+			quantity: 1,
+		};
+		this.context.addToCart(x);
+		// animation
+		this.setAnimate();
+		setTimeout(() => {
+			this.setAnimate();
+		}, 1000);
 	};
 	handleProductPage = () => {
 		this.context.setSelectedProduct(this.props.product);
@@ -43,6 +67,9 @@ export default class CategorieItem extends React.Component {
 					<StockInfo display1={this.props.product.inStock}>
 						OUT OF STOCK
 					</StockInfo>
+					<AddToCartInfo animate={this.state.animate}>
+						Added To Cart !
+					</AddToCartInfo>
 				</PictureContainer>
 				<StyledLink to={`/Shop/product/${this.props.product.name}`}>
 					<Wrapper
